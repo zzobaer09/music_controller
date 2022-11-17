@@ -48,7 +48,9 @@ export default class CreateRoomPage extends Component{
             })
         }
         const url = "/api/create-room/"
-        fetch(url , requestOptions).then(response => response.json()).then(data => console.log(data))
+        fetch(url , requestOptions)
+            .then(response => response.json())
+            .then(data => this.props.history.push("/room/" + data.code))
     }
 
     render(){
