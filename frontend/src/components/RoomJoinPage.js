@@ -47,6 +47,7 @@ export default class RoomJoinPage extends Component{
                     </Button>
                 </Grid>
                 {/* button end */}
+                
             </Grid>
             
         )
