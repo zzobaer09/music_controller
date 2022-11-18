@@ -27,6 +27,7 @@ export default class Room extends Component{
     }
 
     render(){
+        
         return (
             <div>
                 <h3>Room Code: {this.roomCode}</h3>
