@@ -24,6 +24,8 @@ class CreateRoomView(APIView):
     def post(self , request , format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
+
+        print(self.request.session.session_key)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             guest_can_pause = serializer.data.get("guest_can_pause")
@@ -47,9 +49,12 @@ class CreateRoomView(APIView):
 class JoinRoom(APIView):
     lookup_url_kwargs = "code"
     def post(self , request , format=None):
-        if self.request.session.exists(self.request.session.session_key):
+        if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
-        
+
+        print(self.request.session.exists(self.request.session.session_key))
+        print(self.request.session.session_key)
+
         code = self.request.data.get(self.lookup_url_kwargs)
         if code != None:
             room__ = Room.objects.filter(code=code)
@@ -74,6 +79,8 @@ class GetRoom(APIView):
             room = Room.objects.filter(code=code)
             if len(room) > 0:
                 data = RoomSerializer(room[0]).data
+                print(self.request.session.session_key)
+                print(room[0].host)
                 data["isHost"] = self.request.session.session_key == room[0].host
                 return Response(data , status=status.HTTP_200_OK)
             else:
@@ -84,8 +91,9 @@ class GetRoom(APIView):
 
 class UserInRoom(APIView):
     def get(self , request , format=None):
-        if self.request.session.exists(self.request.session.session_key):
+        if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
+        print(self.request.session.session_key)
 
         data = {
             "code" : self.request.session.get("room_code")
