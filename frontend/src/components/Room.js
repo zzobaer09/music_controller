@@ -21,15 +21,22 @@ export default class Room extends Component{
             method: "POST",
             headers: {"Content-Type":"application/json"}
         }
-        fetch("api/leave-room/" , requestOption)
+        fetch("/api/leave-room/" , requestOption)
             .then(_response=>{
+                // this.props.leaveRoomCallback()
                 this.props.history.push("/")
             })
     }
 
     getRoomDitail(){
         fetch("/api/get-room" + "?code=" + this.roomCode)
-            .then(response=>response.json())
+            .then(response=>{
+                if(!response.ok){
+                    // this.props.leaveRoomCallback()
+                    this.props.history.push("/")
+                }
+                return response.json()
+            })
             .then(data => {
                 this.setState({
                     votesToSkip : data.votes_to_skip,
