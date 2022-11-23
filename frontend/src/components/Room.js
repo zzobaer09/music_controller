@@ -92,7 +92,7 @@ export default class Room extends Component{
             </Grid>
         )
     }
-
+    
     render(){
         if ( this.state.showSettings){
             return this.renderSettingsPage()
