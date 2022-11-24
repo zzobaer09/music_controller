@@ -92,9 +92,6 @@ class GetRoom(APIView):
 
 class UserInRoom(APIView):
     def get(self , request , format=None):
-        print('user in rooom')
-        print(self.request.session.session_key)
-        print(self.request.session.get("room_code"))
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
 
@@ -125,7 +122,6 @@ class UpdateView(APIView):
     serializer_class = UpdateRoomSerializer
 
     def patch(self , request , format=None):
-
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
 
