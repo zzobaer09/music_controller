@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from requests import  Request , post
 from rest_framework import status
 from rest_framework.response import Response
-from .util import update_or_create_user_token , is_spotify_authenticated
+from .util import *
+from api.models import Room
 
 #! Create your views here.
 
@@ -55,3 +56,19 @@ class IsAuthenticated(APIView):
         print("in server")
         isAuthenticated = is_spotify_authenticated(request.session.session_key)
         return Response({"status":isAuthenticated} , status=status.HTTP_200_OK)
+
+
+class CurrentSong(APIView):
+    def get(self , request , format=None):
+        room_code = self.request.session.get("room_code")
+        room = Room.objects.filter(code=room_code)
+        if room.exists():
+            room = room[0]
+        else:
+            return Response({},status=status.HTTP_400_BAD_REQUEST)
+        host = room.host
+        endpoint = "/player/currently-playing"
+
+        response = execute_spotify_api_request(host ,endpoint)
+        print(request)
+        return Response(response , status=status.HTTP_200_OK)
