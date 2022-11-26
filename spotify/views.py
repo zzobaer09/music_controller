@@ -44,7 +44,6 @@ def spotify_callback(request , format=None):
     if not request.session.exists(request.session.session_key):
         request.session.create()
 
-    print(token_type)
     update_or_create_user_token(request.session.session_key, access_token , token_type, refresh_token, expires_in)
 
     return redirect("frontend:")
@@ -53,5 +52,7 @@ def spotify_callback(request , format=None):
 class IsAuthenticated(APIView):
     def get(self , request , format=None):
         print("in server")
-        isAuthenticated = is_spotify_authenticated(request.session.session_key)
+        print(self.request.session.session_key)
+        isAuthenticated = is_spotify_authenticated(self.request.session.session_key)
         return Response({"status":isAuthenticated} , status=status.HTTP_200_OK)
+        # return Response({} , status=status.HTTP_200_OK)

@@ -60,7 +60,7 @@ export default class Room extends Component{
     }
 
     authenticateSpotify(){
-        fetch("/spotify/is-authenticated")
+        fetch("/spotify/is-authenticated/")
             .then(response=>response.json())
             .then(data => {
                 this.setState({
@@ -69,7 +69,7 @@ export default class Room extends Component{
 
                 
                 if(!this.state.spotifyAuthenticated){
-                    fetch("/spotify/get-auth-url")
+                    fetch("/spotify/get-auth-url/")
                         .then(response => response.json())
                         .then(data=>{
                             window.location.replace(data.url)
