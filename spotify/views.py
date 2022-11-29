@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from requests import  Request , post
 from rest_framework import status
 from rest_framework.response import Response
-from .util import update_or_create_user_token , is_spotify_authenticated
+from .util import *
+from api.models import Room
 
 #! Create your views here.
 
@@ -52,7 +53,5 @@ def spotify_callback(request , format=None):
 class IsAuthenticated(APIView):
     def get(self , request , format=None):
         print("in server")
-        print(self.request.session.session_key)
-        isAuthenticated = is_spotify_authenticated(self.request.session.session_key)
+        isAuthenticated = is_spotify_authenticated(request.session.session_key)
         return Response({"status":isAuthenticated} , status=status.HTTP_200_OK)
-        # return Response({} , status=status.HTTP_200_OK)

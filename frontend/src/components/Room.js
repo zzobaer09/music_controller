@@ -2,6 +2,7 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import CreateRoomPage from "./CreateRoomPage"
+import MusicPlayer from "./MusicPlayer";
 
 export default class Room extends Component{
     constructor(props){
@@ -12,6 +13,7 @@ export default class Room extends Component{
             isHost: false,
             showSettings : false,
             spotifyAuthenticated: false,
+            song: {},
         }
         this.roomCode = this.props.match.params.roomCode
     
@@ -22,8 +24,18 @@ export default class Room extends Component{
         this.renderSettingsButton = this.renderSettingsButton.bind(this)
         this.renderSettingsPage = this.renderSettingsPage.bind(this)
         this.authenticateSpotify = this.authenticateSpotify.bind(this)
+        this.getCurrentSong = this.getCurrentSong.bind(this)
+
     }
     
+    componentDidMount(){
+        this.interval = setInterval(this.getCurrentSong,1000)
+    }
+    componentWillUnmount(){
+        clearInterval(this.interval)
+    }
+
+
     leaveButtonPressed(){
         const requestOption = {
             method: "POST",
@@ -84,6 +96,21 @@ export default class Room extends Component{
         })
     }
 
+    getCurrentSong(){
+        fetch("/spotify/current-song/")
+            .then(response=>{
+                if (!response.ok){
+                    return {}
+                }else{
+                    return response.json()
+                }
+            })
+            .then(data=>{
+                this.setState({ song: data })
+                console.log(data);
+            })
+    }
+
     renderSettingsPage(){
         return (
             <Grid container spacing={1}>
@@ -132,18 +159,12 @@ export default class Room extends Component{
                     </Typography>
                 </Grid>
                 <Grid item xs={12} align="center">
-                    <Typography variant="h6" component="h6">
-                        Votes : {this.state.votesToSkip}
-                    </Typography>
+                    <MusicPlayer {...this.state.song}/>
                 </Grid>
+                
                 <Grid item xs={12} align="center">
                     <Typography variant="h6" component="h6">
-                        Guest Can Pause : {this.state.guestCanPause.toString()}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} align="center">
-                    <Typography variant="h6" component="h6">
-                        Host : {this.state.isHost.toString()}
+                        spotifyAuthenticated : {this.state.spotifyAuthenticated.toString()}
                     </Typography>
                 </Grid>
                     {this.state.isHost ? this.renderSettingsButton() : null}
@@ -162,6 +183,41 @@ export default class Room extends Component{
 
 
 
+// <Grid item xs={12} align="center">
+// <Typography variant="h6" component="h6">
+//     Votes : {this.state.votesToSkip}
+// </Typography>
+// </Grid>
+// <Grid item xs={12} align="center">
+// <Typography variant="h6" component="h6">
+//     Guest Can Pause : {this.state.guestCanPause.toString()}
+// </Typography>
+// </Grid>
+// <Grid item xs={12} align="center">
+// <Typography variant="h6" component="h6">
+//     Host : {this.state.isHost.toString()}
+// </Typography>
+// </Grid>
+// <Grid item xs={12} align="center">
+// <Typography variant="h6" component="h6">
+//     spotifyAuthenticated : {this.state.spotifyAuthenticated.toString()}
+// </Typography>
+// </Grid>
+// <Grid item xs={12} align="center">
+// <Typography variant="h6" component="h6">
+//     time : {this.state.song.time/(1000*60)}
+// </Typography>
+// </Grid>
+// <Grid item xs={12} align="center">
+// <Typography variant="h6" component="h6">
+//     song : {this.state.song.title}
+// </Typography>
+// </Grid>
+// <Grid item xs={12} align="center">
+// <Typography variant="h6" component="h6">
+//     artist : {this.state.song.artist}
+// </Typography>
+// </Grid>
 
 
             // <div>
