@@ -8,6 +8,7 @@ from .credentials import CLIENT_ID , CLIENT_SECRET , REDIRECT_URI
 BASE_URL = "https://api.spotify.com/v1/me/"
 
 
+
 def get_user_token(user_id):
     user = SpotifyToken.objects.filter(user=user_id)
     if user.exists():
